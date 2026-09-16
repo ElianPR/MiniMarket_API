@@ -16,11 +16,13 @@ public class CategoryServiceImpl implements ICategoryService{
     private final CategoryRepository categoryRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public List<Category> findAll() {
         return categoryRepository.findAll();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Category findById(Long id) {
         return categoryRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Categoria no encontrada con el id: " + id)
@@ -28,6 +30,7 @@ public class CategoryServiceImpl implements ICategoryService{
     }
 
     @Override
+    @Transactional
     public Category save(Category category) {
         return categoryRepository.save(category);
     }
@@ -42,6 +45,7 @@ public class CategoryServiceImpl implements ICategoryService{
     }
 
     @Override
+    @Transactional
     public void deleteById(Long id) {
         if (!categoryRepository.existsById(id)) {
             throw new ResourceNotFoundException("Categoria no encontrada con id: " + id);
