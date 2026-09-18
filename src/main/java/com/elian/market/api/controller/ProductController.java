@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,6 +22,7 @@ public class ProductController {
     private final ProductMapper productMapper;
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public ResponseEntity<Page<ProductResponseDto>> findAll(Pageable pageable) {
 
         Page<ProductResponseDto> products = productService
@@ -31,6 +33,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public ResponseEntity<ProductResponseDto> findById(@PathVariable Long id) {
 
         Product product = productService.findById(id);
@@ -41,6 +44,7 @@ public class ProductController {
     }
 
     @GetMapping("/category/{categoryId}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public ResponseEntity<Page<ProductResponseDto>> findByCategory(
             @PathVariable Long categoryId,
             Pageable pageable) {
@@ -53,6 +57,7 @@ public class ProductController {
     }
 
     @GetMapping("/search")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public ResponseEntity<Page<ProductResponseDto>> search(
             @RequestParam String name,
             Pageable pageable) {
@@ -65,6 +70,7 @@ public class ProductController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<ProductResponseDto> create(
             @Valid @RequestBody ProductRequestDto dto) {
 
@@ -81,6 +87,7 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<ProductResponseDto> update(
             @PathVariable Long id,
             @Valid @RequestBody ProductRequestDto dto) {
@@ -99,6 +106,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<Void> deleteById(
             @PathVariable Long id) {
 

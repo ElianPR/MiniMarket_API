@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class CategoryController {
     private final CategoryMapper categoryMapper;
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public ResponseEntity<List<CategoryResponseDto>> findAll() {
         List<CategoryResponseDto> categories = categoryService
                 .findAll()
@@ -33,12 +35,14 @@ public class CategoryController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<CategoryResponseDto> findById(@PathVariable Long id) {
         Category category = categoryService.findById(id);
         return ResponseEntity.ok(categoryMapper.toResponseDto(category));
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<CategoryResponseDto> save(@Valid @RequestBody CategoryRequestDto dto) {
         Category category = categoryMapper.toEntity(dto);
         Category savedCategory = categoryService.save(category);
@@ -46,6 +50,7 @@ public class CategoryController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<CategoryResponseDto> update(@PathVariable Long id, @Valid @RequestBody CategoryRequestDto dto) {
         Category category = categoryMapper.toEntity(dto);
         Category updatedCategory = categoryService.update(id, category);
@@ -53,6 +58,7 @@ public class CategoryController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         categoryService.deleteById(id);
         return ResponseEntity.noContent().build();
